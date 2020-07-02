@@ -1,0 +1,12 @@
+name: BTEPlugin
+version: ${project.version}
+main: de.kid2407.bteplugin.BTEPlugin
+prefix: BTE
+description: A Plugin made for Build the Earth Germany
+commands:
+  fly:
+    permission: bte.fly
+    description: Let's you toggle creative-like flight
+  speed:
+    permission: bte.speed
+    description: Changes you walking speed
