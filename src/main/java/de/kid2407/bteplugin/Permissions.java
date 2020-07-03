@@ -8,7 +8,8 @@ package de.kid2407.bteplugin;
 public enum Permissions {
 
     FLY_USE("fly"),
-    SPEED_USE("speed");
+    SPEED_USE("speed"),
+    VISIT_CREATE("visit.create");
 
     private final String permission;
 

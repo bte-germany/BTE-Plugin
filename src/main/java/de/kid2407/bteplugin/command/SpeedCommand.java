@@ -8,6 +8,9 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,13 +22,16 @@ import java.util.stream.Collectors;
  * Date: 02.07.2020
  * Time: 19:38
  */
-public class SpeedCommand implements CommandExecutor, TabCompleter {
+public class SpeedCommand implements CommandExecutor, TabCompleter, Listener {
+
+    public static final float PLAYER_DEFAULT_WALK_SPEED = 0.2F;
+    public static final float PLAYER_DEFAULT_FLY_SPEED = 0.1F;
 
     private final HashMap<String, Float> speeds = new HashMap<String, Float>() {{
-        put("slow", 0.1F);
-        put("normal", 0.2F);
-        put("fast", 0.5F);
-        put("unlimited", 1F);
+        put("langsam", 0.1F);
+        put("normal", PLAYER_DEFAULT_WALK_SPEED);
+        put("schnell", 0.5F);
+        put("lichtgeschwindigkeit", 1F);
     }};
 
     @Override
@@ -40,7 +46,8 @@ public class SpeedCommand implements CommandExecutor, TabCompleter {
                         float newSpeed = speeds.get(newSpeedname);
 
                         player.setWalkSpeed(newSpeed);
-                        player.sendMessage(BTEPlugin.PREFIX + "Deine neue Laufgeschwindigkeit ist §" + ChatColor.AQUA.getChar() + newSpeedname);
+                        player.setFlySpeed(newSpeedname.equals("normal") ? PLAYER_DEFAULT_FLY_SPEED : newSpeed);
+                        player.sendMessage(BTEPlugin.PREFIX + "Deine neue Geschwindigkeit ist §" + ChatColor.AQUA.getChar() + newSpeedname);
                     } else {
                         player.sendMessage(BTEPlugin.PREFIX + "Unbekannter Speed.");
                     }
@@ -63,5 +70,11 @@ public class SpeedCommand implements CommandExecutor, TabCompleter {
             return speeds.keySet().stream().filter(s -> s.startsWith(args[0])).collect(Collectors.toList());
         }
         return new ArrayList<>(speeds.keySet());
+    }
+
+    @EventHandler
+    public void onPlayerLeave(PlayerQuitEvent event) {
+        event.getPlayer().setWalkSpeed(PLAYER_DEFAULT_WALK_SPEED);
+        event.getPlayer().setFlySpeed(PLAYER_DEFAULT_FLY_SPEED);
     }
 }

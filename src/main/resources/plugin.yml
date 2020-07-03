@@ -10,3 +10,6 @@ commands:
   speed:
     permission: bte.speed
     description: Changes you walking speed
+  visit:
+    permission: bte.visit.use
+    description: Allows you to interact with tours

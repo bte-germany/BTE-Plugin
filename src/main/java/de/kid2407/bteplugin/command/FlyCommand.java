@@ -1,5 +1,6 @@
 package de.kid2407.bteplugin.command;
 
+import de.kid2407.bteplugin.BTEPlugin;
 import de.kid2407.bteplugin.Permissions;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -24,7 +25,7 @@ public class FlyCommand implements CommandExecutor {
             return true;
         }
 
-        sender.sendMessage("Kann nur von einem Spieler benutzt werden!");
+        sender.sendMessage(BTEPlugin.PREFIX + "Kann nur von einem Spieler benutzt werden!");
         return false;
     }
 }
