@@ -6,13 +6,16 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
 
 /**
  * User: Tobias Franz
  * Date: 02.07.2020
  * Time: 19:13
  */
-public class FlyCommand implements CommandExecutor {
+public class FlyCommand implements CommandExecutor, Listener {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -27,5 +30,13 @@ public class FlyCommand implements CommandExecutor {
 
         sender.sendMessage(BTEPlugin.PREFIX + "Kann nur von einem Spieler benutzt werden!");
         return false;
+    }
+
+    @EventHandler
+    public void onPlayerJoin(PlayerJoinEvent playerJoinEvent) {
+        Player player = playerJoinEvent.getPlayer();
+        if (player.hasPermission(Permissions.FLY_JOIN.getPermission())) {
+            player.setAllowFlight(true);
+        }
     }
 }

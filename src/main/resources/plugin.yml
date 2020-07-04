@@ -10,6 +10,9 @@ commands:
   speed:
     permission: bte.speed
     description: Changes you walking speed
+  build:
+    permission: bte.build
+    description: Switches between the two gamesmodes set in the config
   visit:
     permission: bte.visit.use
     description: Allows you to interact with tours
