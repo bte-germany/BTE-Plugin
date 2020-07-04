@@ -2,6 +2,7 @@ package de.kid2407.bteplugin.command;
 
 import de.kid2407.bteplugin.BTEPlugin;
 import de.kid2407.bteplugin.Permissions;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -22,7 +23,13 @@ public class FlyCommand implements CommandExecutor, Listener {
         if (sender instanceof Player) {
             Player player = (Player) sender;
             if (player.hasPermission(Permissions.FLY_USE.getPermission())) {
-                player.setAllowFlight(!player.getAllowFlight());
+                boolean newAllowFlight = !player.getAllowFlight();
+                player.setAllowFlight(newAllowFlight);
+                if (newAllowFlight) {
+                    player.sendMessage("Fliegen " + ChatColor.GREEN + "aktiviert.");
+                } else {
+                    player.sendMessage("Fliegen " + ChatColor.RED + "deaktiviert.");
+                }
             }
 
             return true;

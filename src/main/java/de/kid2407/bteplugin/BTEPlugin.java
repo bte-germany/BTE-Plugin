@@ -13,21 +13,29 @@ import java.util.logging.Logger;
 
 public final class BTEPlugin extends JavaPlugin {
 
-    public final static String PREFIX = "§" + ChatColor.AQUA.getChar() + "[BTE-Plugin] §" + ChatColor.WHITE.getChar();
+    public final static String PREFIX = ChatColor.AQUA + "[BTE-Plugin] " + ChatColor.WHITE;
 
     @Override
     public void onEnable() {
         Logger logger = getLogger();
 
-        logger.info("Registriere Commands");
-        Bukkit.getPluginCommand("fly").setExecutor(new FlyCommand());
-        Bukkit.getPluginCommand("speed").setExecutor(new SpeedCommand());
-        Bukkit.getPluginCommand("build").setExecutor(new BuildCommand());
-        Bukkit.getPluginCommand("visit").setExecutor(new VisitCommand());
-        logger.info("Commands erfolreich registriert");
+        logger.info("Registriere Kommandos");
 
-        getServer().getPluginManager().registerEvents(new SpeedCommand(), this);
-        getServer().getPluginManager().registerEvents(new FlyCommand(), this);
+        FlyCommand flyCommand = new FlyCommand();
+        SpeedCommand speedCommand = new SpeedCommand();
+        BuildCommand buildCommand = new BuildCommand();
+        VisitCommand visitCommand = new VisitCommand();
+
+        Bukkit.getPluginCommand("fly").setExecutor(flyCommand);
+        Bukkit.getPluginCommand("speed").setExecutor(speedCommand);
+        Bukkit.getPluginCommand("build").setExecutor(buildCommand);
+        Bukkit.getPluginCommand("visit").setExecutor(visitCommand);
+        logger.info("Kommandos erfolreich registriert");
+
+        getServer().getPluginManager().registerEvents(flyCommand, this);
+        getServer().getPluginManager().registerEvents(speedCommand, this);
+        getServer().getPluginManager().registerEvents(visitCommand, this);
+        logger.info("Events erfolreich registriert");
     }
 
     @Override

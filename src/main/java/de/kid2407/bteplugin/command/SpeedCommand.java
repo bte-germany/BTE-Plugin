@@ -47,7 +47,7 @@ public class SpeedCommand implements CommandExecutor, TabCompleter, Listener {
 
                         player.setWalkSpeed(newSpeed);
                         player.setFlySpeed(newSpeedname.equals("normal") ? PLAYER_DEFAULT_FLY_SPEED : newSpeed);
-                        player.sendMessage(BTEPlugin.PREFIX + "Deine neue Geschwindigkeit ist §" + ChatColor.AQUA.getChar() + newSpeedname);
+                        player.sendMessage(BTEPlugin.PREFIX + "Deine neue Geschwindigkeit ist " + ChatColor.AQUA + newSpeedname);
                     } else {
                         player.sendMessage(BTEPlugin.PREFIX + "Unbekannter Speed.");
                     }
@@ -60,7 +60,7 @@ public class SpeedCommand implements CommandExecutor, TabCompleter, Listener {
             return true;
         }
 
-        sender.sendMessage("Kann nur von einem Spieler benutzt werden!");
+        sender.sendMessage(BTEPlugin.PREFIX + "Kann nur von einem Spieler benutzt werden!");
         return false;
     }
 
@@ -73,8 +73,9 @@ public class SpeedCommand implements CommandExecutor, TabCompleter, Listener {
     }
 
     @EventHandler
-    public void onPlayerLeave(PlayerQuitEvent event) {
-        event.getPlayer().setWalkSpeed(PLAYER_DEFAULT_WALK_SPEED);
-        event.getPlayer().setFlySpeed(PLAYER_DEFAULT_FLY_SPEED);
+    public void onPlayerLeave(PlayerQuitEvent playerQuitEvent) {
+        Player player = playerQuitEvent.getPlayer();
+        player.setWalkSpeed(PLAYER_DEFAULT_WALK_SPEED);
+        player.setFlySpeed(PLAYER_DEFAULT_FLY_SPEED);
     }
 }
