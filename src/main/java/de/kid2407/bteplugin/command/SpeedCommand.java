@@ -40,7 +40,7 @@ public class SpeedCommand implements CommandExecutor, TabCompleter, Listener {
             Player player = (Player) sender;
             if (player.hasPermission(Permissions.SPEED_USE.getPermission())) {
                 if (args.length > 0) {
-                    String newSpeedname = args[0];
+                    String newSpeedname = args[0].replace(",", ".");
 
                     if (speeds.containsKey(newSpeedname)) {
                         float newSpeed = speeds.get(newSpeedname);
@@ -49,7 +49,22 @@ public class SpeedCommand implements CommandExecutor, TabCompleter, Listener {
                         player.setFlySpeed(newSpeedname.equals("normal") ? PLAYER_DEFAULT_FLY_SPEED : newSpeed);
                         player.sendMessage(BTEPlugin.PREFIX + "Deine neue Geschwindigkeit ist " + ChatColor.AQUA + newSpeedname);
                     } else {
-                        player.sendMessage(BTEPlugin.PREFIX + "Unbekannter Speed.");
+                        try {
+                            float newSpeed = Float.parseFloat(newSpeedname);
+                            if (newSpeed < 0 || newSpeed > 5) {
+                                player.sendMessage(BTEPlugin.PREFIX + "Ungültiger Wert für den speed. Verwende einen der vorgegebenen Werte oder einen Wert zwischen 0 und 5.");
+                                return true;
+                            }
+
+                            newSpeed = newSpeed / 5F;
+
+                            player.setWalkSpeed(newSpeed);
+                            player.setFlySpeed(newSpeed);
+                            player.sendMessage(BTEPlugin.PREFIX + "Deine neue Geschwindigkeit ist " + ChatColor.AQUA + newSpeedname);
+
+                        } catch (NumberFormatException numberFormatException) {
+                            player.sendMessage(BTEPlugin.PREFIX + "Ungültiger Wert für den speed. Verwende einen der vorgegebenen Werte oder einen Wert zwischen 0 und 5.");
+                        }
                     }
                 } else {
                     player.sendMessage(BTEPlugin.PREFIX + "Du must einen Speed angeben!");
