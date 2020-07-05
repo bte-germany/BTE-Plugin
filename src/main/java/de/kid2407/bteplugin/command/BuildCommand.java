@@ -10,6 +10,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 
 /**
  * User: Tobias Franz
@@ -18,8 +20,13 @@ import org.bukkit.event.player.PlayerJoinEvent;
  */
 public class BuildCommand implements CommandExecutor, Listener {
 
-    private static GameMode firstGameMode = GameMode.CREATIVE;
-    private static GameMode secondGameMode = GameMode.ADVENTURE;
+    private final GameMode firstGameMode;
+    private final GameMode secondGameMode;
+
+    public BuildCommand(GameMode firstGameMode, GameMode secondGameMode) {
+        this.firstGameMode = firstGameMode;
+        this.secondGameMode = secondGameMode;
+    }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -47,14 +54,19 @@ public class BuildCommand implements CommandExecutor, Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent playerJoinEvent) {
-        playerJoinEvent.getPlayer().setGameMode(GameMode.ADVENTURE);
+        Player player = playerJoinEvent.getPlayer();
+        player.setGameMode(GameMode.ADVENTURE);
+        player.setInvulnerable(true);
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                player.setInvulnerable(false);
+            }
+        }.runTaskLaterAsynchronously(BTEPlugin.instance, 100);
     }
 
-    public static void setFirstGameMode(GameMode firstGameMode) {
-        BuildCommand.firstGameMode = firstGameMode;
-    }
-
-    public static void setSecondGameMode(GameMode secondGameMode) {
-        BuildCommand.secondGameMode = secondGameMode;
+    @EventHandler
+    public void onPlayerLeave(PlayerQuitEvent playerQuitEvent) {
+        playerQuitEvent.getPlayer().setInvulnerable(false);
     }
 }
