@@ -7,18 +7,13 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.scheduler.BukkitRunnable;
 
 /**
  * User: Tobias Franz
  * Date: 04.07.2020
  * Time: 10:15
  */
-public class BuildCommand implements CommandExecutor, Listener {
+public class BuildCommand implements CommandExecutor {
 
     private final GameMode firstGameMode;
     private final GameMode secondGameMode;
@@ -50,23 +45,5 @@ public class BuildCommand implements CommandExecutor, Listener {
 
         sender.sendMessage(BTEPlugin.PREFIX + "Kann nur von einem Spieler benutzt werden!");
         return false;
-    }
-
-    @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent playerJoinEvent) {
-        Player player = playerJoinEvent.getPlayer();
-        player.setGameMode(GameMode.ADVENTURE);
-        player.setInvulnerable(true);
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                player.setInvulnerable(false);
-            }
-        }.runTaskLaterAsynchronously(BTEPlugin.instance, 100);
-    }
-
-    @EventHandler
-    public void onPlayerLeave(PlayerQuitEvent playerQuitEvent) {
-        playerQuitEvent.getPlayer().setInvulnerable(false);
     }
 }

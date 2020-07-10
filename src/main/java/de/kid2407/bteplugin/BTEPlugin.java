@@ -48,7 +48,6 @@ public final class BTEPlugin extends JavaPlugin {
 
         getServer().getPluginManager().registerEvents(flyCommand, this);
         getServer().getPluginManager().registerEvents(speedCommand, this);
-        getServer().getPluginManager().registerEvents(buildCommand, this);
         getServer().getPluginManager().registerEvents(visitCommand, this);
         logger.info("Events erfolreich registriert");
     }
