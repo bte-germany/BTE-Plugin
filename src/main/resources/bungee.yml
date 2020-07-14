@@ -1,0 +1,5 @@
+name: BTE-Plugin
+main: de.kid2407.bteplugin.bungee.BTEBungee
+author: kid2407
+description: The Bungee-Part for the Spigot-Plugin
+version: ${project.version}

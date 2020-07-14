@@ -1,25 +1,21 @@
-package de.kid2407.bteplugin.command;
+package de.kid2407.bteplugin.spigot.command;
 
-import de.kid2407.bteplugin.BTEPlugin;
-import de.kid2407.bteplugin.Permissions;
+import de.kid2407.bteplugin.spigot.BTEPlugin;
+import de.kid2407.bteplugin.spigot.Permissions;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -131,18 +127,9 @@ public class VisitCommand implements CommandExecutor, TabCompleter, Listener {
     public void command_come(Player player) {
         if (canUseLeaderCommand(player)) {
             player.sendMessage("Teleportiere " + visitors.size() + " Spieler.");
-            Location leadLocation = tourLeader.getLocation();
-            int randomX;
-            int randomZ;
-            Random random = new Random();
-            for (Player visitor : visitors) {
-                randomX = random.nextInt(5) * (random.nextBoolean() ? 1 : -1);
-                randomZ = random.nextInt(5) * (random.nextBoolean() ? 1 : -1);
 
-                Location teleportLocation = leadLocation.clone();
-                teleportLocation.add(randomX, 0, randomZ);
-
-                visitor.teleport(teleportLocation, PlayerTeleportEvent.TeleportCause.PLUGIN);
+            for (Player p : visitors) {
+                BTEPlugin.instance.sendPluginMessage("teleportPlayerToServer", player, p.getUniqueId().toString());
             }
         }
     }
@@ -180,6 +167,8 @@ public class VisitCommand implements CommandExecutor, TabCompleter, Listener {
             textStart.addExtra(textStartCommand);
 
             player.spigot().sendMessage(textStart);
+
+            BTEPlugin.instance.sendPluginMessage("startTour", player);
         }
     }
 
@@ -327,30 +316,61 @@ public class VisitCommand implements CommandExecutor, TabCompleter, Listener {
 
             tourLeader = null;
             visitors.clear();
+
+            BTEPlugin.instance.sendPluginMessage("stopTour", player);
         }
     }
 
     private void removeVisitor(Player player) {
+        removeVisitor(player, true);
+    }
+
+    public void removeVisitor(Player player, boolean sendPluginMessage) {
         visitors.remove(player);
-        if (tourLeader != null) {
-            tourLeader.sendMessage(BTEPlugin.PREFIX + player.getDisplayName() + " hat die Tour verlassen.");
+        tourLeader.sendMessage(BTEPlugin.PREFIX + player.getDisplayName() + " hat die Tour verlassen.");
+
+        if (sendPluginMessage) {
+            BTEPlugin.instance.sendPluginMessage("requestRemovePlayer", player, player.getUniqueId().toString());
         }
     }
 
     private void addVisitor(Player player) {
+        addVisitor(player, true);
+    }
+
+    public void addVisitor(Player player, boolean sendPluginMessage) {
         visitors.add(player);
-        if (tourLeader != null) {
-            tourLeader.sendMessage(BTEPlugin.PREFIX + player.getDisplayName() + " ist der Tour beigetreten.");
+        tourLeader.sendMessage(BTEPlugin.PREFIX + player.getDisplayName() + " ist der Tour beigetreten.");
+
+        if (sendPluginMessage) {
+            BTEPlugin.instance.sendPluginMessage("requestAddPlayer", player, player.getUniqueId().toString());
         }
     }
 
-    @EventHandler
-    public void onPlayerLeave(PlayerQuitEvent playerQuitEvent) {
-        Player player = playerQuitEvent.getPlayer();
-        if (tourLeader != null && player.getUniqueId().equals(tourLeader.getUniqueId())) {
-            command_stop(player, true);
-        } else {
-            removeVisitor(player);
+    public void teleportVisitor(UUID uuid) {
+        Player visitor = Bukkit.getPlayer(uuid);
+
+        if (visitors.contains(visitor)) {
+            Location leadLocation = tourLeader.getLocation();
+            int randomX;
+            int randomZ;
+            Random random = new Random();
+            randomX = random.nextInt(5) * (random.nextBoolean() ? 1 : -1);
+            randomZ = random.nextInt(5) * (random.nextBoolean() ? 1 : -1);
+
+            Location teleportLocation = leadLocation.clone();
+            teleportLocation.add(randomX, 0, randomZ);
+
+            visitor.teleport(teleportLocation, PlayerTeleportEvent.TeleportCause.PLUGIN);
         }
+    }
+
+    public void startTour(UUID uuid) {
+        this.tourLeader = Bukkit.getPlayer(uuid);
+    }
+
+    public void stopTour() {
+        tourLeader = null;
+        visitors.clear();
     }
 }

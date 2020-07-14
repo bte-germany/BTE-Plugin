@@ -1,4 +1,4 @@
-package de.kid2407.bteplugin;
+package de.kid2407.bteplugin.spigot;
 
 /**
  * User: Tobias Franz

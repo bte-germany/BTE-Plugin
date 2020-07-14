@@ -1,7 +1,7 @@
-package de.kid2407.bteplugin.command;
+package de.kid2407.bteplugin.spigot.command;
 
-import de.kid2407.bteplugin.BTEPlugin;
-import de.kid2407.bteplugin.Permissions;
+import de.kid2407.bteplugin.spigot.BTEPlugin;
+import de.kid2407.bteplugin.spigot.Permissions;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

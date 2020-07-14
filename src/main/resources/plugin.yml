@@ -1,6 +1,6 @@
 name: BTEPlugin
 version: ${project.version}
-main: de.kid2407.bteplugin.BTEPlugin
+main: de.kid2407.bteplugin.spigot.BTEPlugin
 prefix: BTE
 description: A Plugin made for Build the Earth Germany
 commands:
